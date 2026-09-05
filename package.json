@@ -1,0 +1,14 @@
+{
+    "name": "miau",
+    "version": "1.0.0",
+    "description": "A small and modular frontend framework for the web.",
+    "type": "module",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0"
+    }
+}
+
