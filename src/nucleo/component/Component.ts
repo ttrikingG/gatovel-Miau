@@ -39,4 +39,26 @@ export abstract class Component {
         this.element = null;
         this.mounted = false;
     }
+
+    public renderElement(): HTMLElement {
+        if (this.mounted) {
+            return this.getElement();
+        }
+
+        const element = this.render();
+
+        this.element = element;
+
+        return element;
+    }
+
+    public getElement(): HTMLElement {
+        if (!this.mounted || this.element === null) {
+            throw new Error(
+                'Component must be mounted before accessing its element.'
+            );
+        }
+
+        return this.element;
+    }
 }
