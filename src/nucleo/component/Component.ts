@@ -1,6 +1,14 @@
-export abstract class Component {
+export abstract class Component<P = {}> {
     private element: HTMLElement | null = null;
     private mounted = false;
+
+    protected readonly props: P;
+
+    public constructor(
+        props: P = {} as P
+    ) {
+        this.props = props;
+    }
 
     protected abstract render(): HTMLElement;
 
@@ -19,7 +27,9 @@ export abstract class Component {
 
     public update(): void {
         if (!this.mounted || this.element === null) {
-            throw new Error('Component must be mounted before updating.');
+            throw new Error(
+                'Component must be mounted before updating.'
+            );
         }
 
         const newElement = this.render();

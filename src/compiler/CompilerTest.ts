@@ -1,14 +1,26 @@
+import { readFile } from 'node:fs/promises';
+
 import { Compiler } from './Compiler.js';
 
-const source = `
-<div class="app">
-    <Header />
-    <h1>Olá Miau</h1>
-</div>
-`;
+const sourcePath =
+    'tests/compiler/App.miau';
 
-const compiler = new Compiler();
+const outputPath =
+    'dist-test/tests/compiler/App.js';
 
-const output = compiler.compile(source);
+const source = await readFile(
+    sourcePath,
+    'utf-8'
+);
+
+const compiler =
+    new Compiler();
+
+const output =
+    await compiler.compile(
+        source,
+        sourcePath,
+        outputPath
+    );
 
 console.log(output);

@@ -13,13 +13,37 @@ interface GeneratedNode {
 export class Generator {
     private variableCounter = 0;
 
-    public generate(nodes: RuntimeNode[]): string {
-        return nodes
-            .map((node) => this.generateNode(node).code)
-            .join('\n');
+    public generate(
+        nodes: RuntimeNode[]
+    ): string {
+        const meaningfulNodes = nodes.filter(
+            (node) =>
+                node.type !== 'create-text' ||
+                node.value.trim().length > 0
+        );
+
+        const generatedNodes = meaningfulNodes.map(
+            (node) => this.generateNode(node)
+        );
+
+        const lines = generatedNodes.map(
+            (node) => node.code
+        );
+
+        const rootNode = generatedNodes[0];
+
+        if (rootNode) {
+            lines.push(
+                `document.body.appendChild(${rootNode.variable});`
+            );
+        }
+
+        return lines.join('\n');
     }
 
-    private generateNode(node: RuntimeNode): GeneratedNode {
+    private generateNode(
+        node: RuntimeNode
+    ): GeneratedNode {
         switch (node.type) {
             case 'create-element':
                 return this.generateElement(node);
@@ -35,7 +59,9 @@ export class Generator {
     private generateElement(
         node: CreateElementNode
     ): GeneratedNode {
-        const variable = this.createVariable(node.tag);
+        const variable = this.createVariable(
+            node.tag
+        );
 
         const lines: string[] = [];
 
@@ -52,7 +78,8 @@ export class Generator {
         }
 
         for (const child of node.children) {
-            const generatedChild = this.generateNode(child);
+            const generatedChild =
+                this.generateNode(child);
 
             lines.push(generatedChild.code);
 
@@ -70,16 +97,22 @@ export class Generator {
     private generateComponent(
         node: CreateComponentNode
     ): GeneratedNode {
-        const componentVariable = this.createVariable(node.name);
+        const componentVariable =
+            this.createVariable(node.name);
 
-        const elementVariable = this.createVariable(
-            `${node.name}_element`
-        );
+        const elementVariable =
+            this.createVariable(
+                `${node.name}_element`
+            );
 
         const lines: string[] = [];
 
+        const props = this.generateProps(
+            node.attributes
+        );
+
         lines.push(
-            `const ${componentVariable} = new ${node.name}();`
+            `const ${componentVariable} = new ${node.name}(${props});`
         );
 
         lines.push(
@@ -92,21 +125,51 @@ export class Generator {
         };
     }
 
+    private generateProps(
+        attributes: CreateComponentNode['attributes']
+    ): string {
+        if (attributes.length === 0) {
+            return '{}';
+        }
+
+        const properties = attributes.map(
+            (attribute) => {
+                const name =
+                    JSON.stringify(attribute.name);
+
+                const value =
+                    attribute.value === null
+                        ? 'undefined'
+                        : JSON.stringify(attribute.value);
+
+                return `${name}: ${value}`;
+            }
+        );
+
+        return `{ ${properties.join(', ')} }`;
+    }
+
     private generateText(
         node: CreateTextNode
     ): GeneratedNode {
-        const variable = this.createVariable('text');
+        const variable =
+            this.createVariable('text');
 
         return {
             code:
-                `const ${variable} = document.createTextNode('${this.escape(node.value)}');`,
+                `const ${variable} = document.createTextNode(${JSON.stringify(node.value)});`,
             variable
         };
     }
 
-    private createVariable(name: string): string {
+    private createVariable(
+        name: string
+    ): string {
         const normalized = name
-            .replace(/[^a-zA-Z0-9_$]/g, '_')
+            .replace(
+                /[^a-zA-Z0-9_$]/g,
+                '_'
+            )
             .toLowerCase();
 
         this.variableCounter++;
@@ -114,9 +177,10 @@ export class Generator {
         return `miau_${normalized}_${this.variableCounter}`;
     }
 
-    private escape(value: string): string {
-        return value
-            .replace(/\\/g, '\\\\')
-            .replace(/'/g, "\\'");
+    private escape(
+        value: string
+    ): string {
+        return JSON.stringify(value)
+            .slice(1, -1);
     }
 }
