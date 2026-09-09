@@ -5,6 +5,10 @@ import { Generator } from './generator/Generator.js';
 import { ComponentResolver } from './resolver/ComponentResolver.js';
 
 import {
+    access
+} from 'node:fs/promises';
+
+import {
     dirname,
     relative,
     resolve
@@ -35,6 +39,12 @@ export class Compiler {
                 outputPath
             );
 
+        const applicationLogicImport =
+            await this.resolveApplicationLogic(
+                sourcePath,
+                outputPath
+            );
+
         const generatedCode =
             new Generator().generate(
                 runtimeAst
@@ -42,6 +52,7 @@ export class Compiler {
 
         return [
             ...imports,
+            applicationLogicImport,
             '',
             generatedCode
         ].join('\n');
@@ -81,6 +92,31 @@ export class Compiler {
         return imports;
     }
 
+    private async resolveApplicationLogic(
+        sourcePath: string,
+        outputPath: string
+    ): Promise<string> {
+        const sourceDirectory =
+            dirname(resolve(sourcePath));
+
+        const logicPath =
+            resolve(
+                sourceDirectory,
+                'AppLogic.ts'
+            );
+
+        await access(logicPath);
+
+        const importPath =
+            this.createImportPath(
+                logicPath,
+                sourcePath,
+                outputPath
+            );
+
+        return `import * as AppLogic from '${importPath}';`;
+    }
+
     private createImportPath(
         componentPath: string,
         sourcePath: string,
@@ -91,12 +127,6 @@ export class Compiler {
 
         const componentAbsolutePath =
             resolve(componentPath);
-
-        const relativeComponentPath =
-            relative(
-                dirname(sourceRoot),
-                componentAbsolutePath
-            );
 
         const outputDirectory =
             dirname(resolve(outputPath));

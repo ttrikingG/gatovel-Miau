@@ -70,11 +70,21 @@ export class Generator {
         );
 
         for (const attribute of node.attributes) {
-            if (attribute.value !== null) {
-                lines.push(
-                    `${variable}.setAttribute('${attribute.name}', '${this.escape(attribute.value)}');`
-                );
+            if (attribute.value === null) {
+                continue;
             }
+
+            if (this.isEvent(attribute.name)) {
+                lines.push(
+                    `${variable}.addEventListener('${this.eventName(attribute.name)}', ${this.handlerReference(attribute.value)});`
+                );
+
+                continue;
+            }
+
+            lines.push(
+                `${variable}.setAttribute('${attribute.name}', '${this.escape(attribute.value)}');`
+            );
         }
 
         for (const child of node.children) {
@@ -107,9 +117,10 @@ export class Generator {
 
         const lines: string[] = [];
 
-        const props = this.generateProps(
-            node.attributes
-        );
+        const props =
+            this.generateProps(
+                node.attributes
+            );
 
         lines.push(
             `const ${componentVariable} = new ${node.name}(${props});`
@@ -137,10 +148,23 @@ export class Generator {
                 const name =
                     JSON.stringify(attribute.name);
 
-                const value =
-                    attribute.value === null
-                        ? 'undefined'
-                        : JSON.stringify(attribute.value);
+                let value: string;
+
+                if (attribute.value === null) {
+                    value = 'undefined';
+                } else if (
+                    this.isEvent(attribute.name)
+                ) {
+                    value =
+                        this.handlerReference(
+                            attribute.value
+                        );
+                } else {
+                    value =
+                        JSON.stringify(
+                            attribute.value
+                        );
+                }
 
                 return `${name}: ${value}`;
             }
@@ -160,6 +184,26 @@ export class Generator {
                 `const ${variable} = document.createTextNode(${JSON.stringify(node.value)});`,
             variable
         };
+    }
+
+    private isEvent(
+        attributeName: string
+    ): boolean {
+        return /^on[A-Z]/.test(attributeName);
+    }
+
+    private eventName(
+        attributeName: string
+    ): string {
+        return attributeName
+            .slice(2)
+            .toLowerCase();
+    }
+
+    private handlerReference(
+        handlerName: string
+    ): string {
+        return `AppLogic.${handlerName}`;
     }
 
     private createVariable(
