@@ -1,10 +1,12 @@
 import type { Token } from '../lexer/Token.js';
+
 import type {
     ASTNode,
     AttributeNode,
     ComponentNode,
     ElementNode,
-    TextNode
+    TextNode,
+    ExpressionNode
 } from '../ast/AST.js';
 
 export class Parser {
@@ -23,8 +25,17 @@ export class Parser {
                 continue;
             }
 
+            if (this.check('expression-open')) {
+                nodes.push(
+                    this.parseExpression()
+                );
+                continue;
+            }
+
             if (this.check('tag-open')) {
-                nodes.push(this.parseElement());
+                nodes.push(
+                    this.parseElement()
+                );
                 continue;
             }
 
@@ -34,28 +45,42 @@ export class Parser {
         return nodes;
     }
 
-    private parseElement(): ElementNode | ComponentNode {
+    private parseElement():
+        ElementNode | ComponentNode {
         this.consume('tag-open');
 
-        const name = this.consume('tag-name').value;
+        const name =
+            this.consume('tag-name').value;
 
-        const attributes = this.parseAttributes();
+        const attributes =
+            this.parseAttributes();
 
         if (this.check('slash')) {
             this.consume('slash');
             this.consume('tag-close');
 
-            return this.createNode(name, attributes, []);
+            return this.createNode(
+                name,
+                attributes,
+                []
+            );
         }
 
         this.consume('tag-close');
 
-        const children = this.parseChildren(name);
+        const children =
+            this.parseChildren(name);
 
-        return this.createNode(name, attributes, children);
+        return this.createNode(
+            name,
+            attributes,
+            children
+        );
     }
 
-    private parseChildren(parentName: string): ASTNode[] {
+    private parseChildren(
+        parentName: string
+    ): ASTNode[] {
         const children: ASTNode[] = [];
 
         while (!this.isAtEnd()) {
@@ -69,12 +94,23 @@ export class Parser {
             }
 
             if (this.check('text')) {
-                children.push(this.parseText());
+                children.push(
+                    this.parseText()
+                );
+                continue;
+            }
+
+            if (this.check('expression-open')) {
+                children.push(
+                    this.parseExpression()
+                );
                 continue;
             }
 
             if (this.check('tag-open')) {
-                children.push(this.parseElement());
+                children.push(
+                    this.parseElement()
+                );
                 continue;
             }
 
@@ -84,20 +120,49 @@ export class Parser {
         return children;
     }
 
-    private parseAttributes(): AttributeNode[] {
+    private parseExpression():
+        ExpressionNode {
+        this.consume(
+            'expression-open'
+        );
+
+        const expression =
+            this.consume(
+                'expression'
+            ).value;
+
+        this.consume(
+            'expression-close'
+        );
+
+        return {
+            type: 'expression',
+            value: expression
+        };
+    }
+
+    private parseAttributes():
+        AttributeNode[] {
         const attributes: AttributeNode[] = [];
 
         while (
             this.check('attribute-name')
         ) {
-            const name = this.consume('attribute-name').value;
+            const name =
+                this.consume(
+                    'attribute-name'
+                ).value;
 
-            let value: string | null = null;
+            let value:
+                string | null = null;
 
             if (this.check('equals')) {
                 this.consume('equals');
 
-                value = this.consume('attribute-value').value;
+                value =
+                    this.consume(
+                        'attribute-value'
+                    ).value;
             }
 
             attributes.push({
@@ -112,7 +177,10 @@ export class Parser {
     private parseText(): TextNode {
         return {
             type: 'text',
-            value: this.consume('text').value
+            value:
+                this.consume(
+                    'text'
+                ).value
         };
     }
 
@@ -120,7 +188,8 @@ export class Parser {
         name: string,
         attributes: AttributeNode[],
         children: ASTNode[]
-    ): ElementNode | ComponentNode {
+    ):
+        ElementNode | ComponentNode {
         if (this.isComponentName(name)) {
             return {
                 type: 'component',
@@ -138,35 +207,65 @@ export class Parser {
         };
     }
 
-    private isComponentName(name: string): boolean {
+    private isComponentName(
+        name: string
+    ): boolean {
         return /^[A-Z]/.test(name);
     }
 
-    private isClosingTag(name: string): boolean {
+    private isClosingTag(
+        name: string
+    ): boolean {
         return (
             this.check('tag-open') &&
             this.checkNext('slash') &&
             this.checkNextNext('tag-name') &&
-            this.tokens[this.position + 2]?.value === name
+            this.tokens[
+                this.position + 2
+            ]?.value === name
         );
     }
 
-    private check(type: Token['type']): boolean {
-        return this.tokens[this.position]?.type === type;
+    private check(
+        type: Token['type']
+    ): boolean {
+        return (
+            this.tokens[
+                this.position
+            ]?.type === type
+        );
     }
 
-    private checkNext(type: Token['type']): boolean {
-        return this.tokens[this.position + 1]?.type === type;
+    private checkNext(
+        type: Token['type']
+    ): boolean {
+        return (
+            this.tokens[
+                this.position + 1
+            ]?.type === type
+        );
     }
 
-    private checkNextNext(type: Token['type']): boolean {
-        return this.tokens[this.position + 2]?.type === type;
+    private checkNextNext(
+        type: Token['type']
+    ): boolean {
+        return (
+            this.tokens[
+                this.position + 2
+            ]?.type === type
+        );
     }
 
-    private consume(type: Token['type']): Token {
-        const token = this.tokens[this.position];
+    private consume(
+        type: Token['type']
+    ): Token {
+        const token =
+            this.tokens[this.position];
 
-        if (!token || token.type !== type) {
+        if (
+            !token ||
+            token.type !== type
+        ) {
             throw new Error(
                 `Expected token "${type}".`
             );
@@ -181,3 +280,4 @@ export class Parser {
         return this.check('eof');
     }
 }
+

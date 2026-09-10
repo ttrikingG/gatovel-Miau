@@ -1,7 +1,8 @@
 export type RuntimeNode =
     | CreateElementNode
     | CreateComponentNode
-    | CreateTextNode;
+    | CreateTextNode
+    | CreateExpressionNode;
 
 export interface CreateElementNode {
     type: 'create-element';
@@ -22,7 +23,13 @@ export interface CreateTextNode {
     value: string;
 }
 
+export interface CreateExpressionNode {
+    type: 'create-expression';
+    value: string;
+}
+
 export interface RuntimeAttributeNode {
     name: string;
     value: string | null;
 }
+

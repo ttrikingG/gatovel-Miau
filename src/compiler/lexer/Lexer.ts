@@ -3,6 +3,7 @@ import type { Token } from './Token.js';
 export class Lexer {
     private position = 0;
     private insideTag = false;
+    private insideExpression = false;
 
     public constructor(
         private readonly source: string
@@ -12,6 +13,11 @@ export class Lexer {
         const tokens: Token[] = [];
 
         while (this.position < this.source.length) {
+            if (this.insideExpression) {
+                this.readExpression(tokens);
+                continue;
+            }
+
             if (!this.insideTag) {
                 this.readOutsideTag(tokens);
                 continue;
@@ -29,6 +35,18 @@ export class Lexer {
     }
 
     private readOutsideTag(tokens: Token[]): void {
+        if (this.source.startsWith('^^', this.position)) {
+            tokens.push({
+                type: 'expression-open',
+                value: '^^'
+            });
+
+            this.position += 2;
+            this.insideExpression = true;
+
+            return;
+        }
+
         if (this.source[this.position] === '<') {
             tokens.push({
                 type: 'tag-open',
@@ -45,12 +63,16 @@ export class Lexer {
 
         while (
             this.position < this.source.length &&
-            this.source[this.position] !== '<'
+            this.source[this.position] !== '<' &&
+            !this.source.startsWith('^^', this.position)
         ) {
             this.position++;
         }
 
-        const value = this.source.slice(start, this.position);
+        const value = this.source.slice(
+            start,
+            this.position
+        );
 
         if (value.length > 0) {
             tokens.push({
@@ -87,7 +109,6 @@ export class Lexer {
             });
 
             this.position++;
-
             return;
         }
 
@@ -98,36 +119,90 @@ export class Lexer {
             });
 
             this.position++;
-
             return;
         }
 
-        if (character === '"' || character === "'") {
-            tokens.push(this.readAttributeValue(character));
+        if (
+            character === '"' ||
+            character === "'"
+        ) {
+            tokens.push(
+                this.readAttributeValue(character)
+            );
+
             return;
         }
 
         if (this.isIdentifierStart(character)) {
-            tokens.push(this.readIdentifier(tokens));
+            tokens.push(
+                this.readIdentifier(tokens)
+            );
+
             return;
         }
 
         this.position++;
     }
 
-    private readIdentifier(tokens: Token[]): Token {
+    private readExpression(tokens: Token[]): void {
         const start = this.position;
 
         while (
             this.position < this.source.length &&
-            this.isIdentifierCharacter(this.source[this.position])
+            !this.source.startsWith('^^', this.position)
         ) {
             this.position++;
         }
 
-        const value = this.source.slice(start, this.position);
+        const value = this.source.slice(
+            start,
+            this.position
+        ).trim();
 
-        const previousToken = tokens[tokens.length - 1];
+        if (value.length > 0) {
+            tokens.push({
+                type: 'expression',
+                value
+            });
+        }
+
+        if (
+            this.source.startsWith(
+                '^^',
+                this.position
+            )
+        ) {
+            tokens.push({
+                type: 'expression-close',
+                value: '^^'
+            });
+
+            this.position += 2;
+            this.insideExpression = false;
+        }
+    }
+
+    private readIdentifier(
+        tokens: Token[]
+    ): Token {
+        const start = this.position;
+
+        while (
+            this.position < this.source.length &&
+            this.isIdentifierCharacter(
+                this.source[this.position]
+            )
+        ) {
+            this.position++;
+        }
+
+        const value = this.source.slice(
+            start,
+            this.position
+        );
+
+        const previousToken =
+            tokens[tokens.length - 1];
 
         if (
             previousToken?.type === 'tag-open' ||
@@ -145,7 +220,9 @@ export class Lexer {
         };
     }
 
-    private readAttributeValue(quote: string): Token {
+    private readAttributeValue(
+        quote: string
+    ): Token {
         this.position++;
 
         const start = this.position;
@@ -157,7 +234,10 @@ export class Lexer {
             this.position++;
         }
 
-        const value = this.source.slice(start, this.position);
+        const value = this.source.slice(
+            start,
+            this.position
+        );
 
         if (this.position < this.source.length) {
             this.position++;
@@ -169,15 +249,21 @@ export class Lexer {
         };
     }
 
-    private isWhitespace(character: string): boolean {
+    private isWhitespace(
+        character: string
+    ): boolean {
         return /\s/.test(character);
     }
 
-    private isIdentifierStart(character: string): boolean {
+    private isIdentifierStart(
+        character: string
+    ): boolean {
         return /[\p{L}_]/u.test(character);
     }
 
-    private isIdentifierCharacter(character: string): boolean {
+    private isIdentifierCharacter(
+        character: string
+    ): boolean {
         return /[\p{L}\p{N}_:-]/u.test(character);
     }
 }

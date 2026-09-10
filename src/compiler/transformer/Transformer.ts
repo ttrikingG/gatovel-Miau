@@ -2,22 +2,30 @@ import type {
     ASTNode,
     ComponentNode,
     ElementNode,
-    TextNode
+    TextNode,
+    ExpressionNode
 } from '../ast/AST.js';
 
 import type {
     RuntimeNode,
     CreateComponentNode,
     CreateElementNode,
-    CreateTextNode
+    CreateTextNode,
+    CreateExpressionNode
 } from './RuntimeAST.js';
 
 export class Transformer {
-    public transform(nodes: ASTNode[]): RuntimeNode[] {
-        return nodes.map((node) => this.transformNode(node));
+    public transform(
+        nodes: ASTNode[]
+    ): RuntimeNode[] {
+        return nodes.map(
+            (node) => this.transformNode(node)
+        );
     }
 
-    private transformNode(node: ASTNode): RuntimeNode {
+    private transformNode(
+        node: ASTNode
+    ): RuntimeNode {
         switch (node.type) {
             case 'element':
                 return this.transformElement(node);
@@ -27,6 +35,9 @@ export class Transformer {
 
             case 'text':
                 return this.transformText(node);
+
+            case 'expression':
+                return this.transformExpression(node);
         }
     }
 
@@ -36,12 +47,15 @@ export class Transformer {
         return {
             type: 'create-element',
             tag: node.tag,
-            attributes: node.attributes.map((attribute) => ({
-                name: attribute.name,
-                value: attribute.value
-            })),
-            children: node.children.map((child) =>
-                this.transformNode(child)
+            attributes: node.attributes.map(
+                (attribute) => ({
+                    name: attribute.name,
+                    value: attribute.value
+                })
+            ),
+            children: node.children.map(
+                (child) =>
+                    this.transformNode(child)
             )
         };
     }
@@ -52,12 +66,15 @@ export class Transformer {
         return {
             type: 'create-component',
             name: node.name,
-            attributes: node.attributes.map((attribute) => ({
-                name: attribute.name,
-                value: attribute.value
-            })),
-            children: node.children.map((child) =>
-                this.transformNode(child)
+            attributes: node.attributes.map(
+                (attribute) => ({
+                    name: attribute.name,
+                    value: attribute.value
+                })
+            ),
+            children: node.children.map(
+                (child) =>
+                    this.transformNode(child)
             )
         };
     }
@@ -67,6 +84,15 @@ export class Transformer {
     ): CreateTextNode {
         return {
             type: 'create-text',
+            value: node.value
+        };
+    }
+
+    private transformExpression(
+        node: ExpressionNode
+    ): CreateExpressionNode {
+        return {
+            type: 'create-expression',
             value: node.value
         };
     }

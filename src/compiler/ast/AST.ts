@@ -1,7 +1,8 @@
 export type ASTNode =
     | ElementNode
     | ComponentNode
-    | TextNode;
+    | TextNode
+    | ExpressionNode;
 
 export interface ElementNode {
     type: 'element';
@@ -19,6 +20,11 @@ export interface ComponentNode {
 
 export interface TextNode {
     type: 'text';
+    value: string;
+}
+
+export interface ExpressionNode {
+    type: 'expression';
     value: string;
 }
 

@@ -2,7 +2,8 @@ import type {
     RuntimeNode,
     CreateElementNode,
     CreateComponentNode,
-    CreateTextNode
+    CreateTextNode,
+    CreateExpressionNode
 } from '../transformer/RuntimeAST.js';
 
 interface GeneratedNode {
@@ -53,6 +54,9 @@ export class Generator {
 
             case 'create-text':
                 return this.generateText(node);
+
+            case 'create-expression':
+                return this.generateExpression(node);
         }
     }
 
@@ -186,6 +190,19 @@ export class Generator {
         };
     }
 
+    private generateExpression(
+        node: CreateExpressionNode
+    ): GeneratedNode {
+        const variable =
+            this.createVariable('expression');
+
+        return {
+            code:
+                `const ${variable} = document.createTextNode(AppLogic.${node.value});`,
+            variable
+        };
+    }
+
     private isEvent(
         attributeName: string
     ): boolean {
@@ -228,3 +245,4 @@ export class Generator {
             .slice(1, -1);
     }
 }
+
