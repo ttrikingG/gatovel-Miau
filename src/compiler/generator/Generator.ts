@@ -3,8 +3,11 @@ import type {
     CreateElementNode,
     CreateComponentNode,
     CreateTextNode,
-    CreateExpressionNode
+    CreateExpressionNode,
+    RuntimeAttributeValue
 } from '../transformer/RuntimeAST.js';
+
+import { ExpressionCompiler } from '../expression/ExpressionCompiler.js';
 
 interface GeneratedNode {
     code: string;
@@ -13,6 +16,9 @@ interface GeneratedNode {
 
 export class Generator {
     private variableCounter = 0;
+
+    private readonly expressionCompiler =
+        new ExpressionCompiler();
 
     public generate(
         nodes: RuntimeNode[]
@@ -63,9 +69,8 @@ export class Generator {
     private generateElement(
         node: CreateElementNode
     ): GeneratedNode {
-        const variable = this.createVariable(
-            node.tag
-        );
+        const variable =
+            this.createVariable(node.tag);
 
         const lines: string[] = [];
 
@@ -80,14 +85,18 @@ export class Generator {
 
             if (this.isEvent(attribute.name)) {
                 lines.push(
-                    `${variable}.addEventListener('${this.eventName(attribute.name)}', ${this.handlerReference(attribute.value)});`
+                    `${variable}.addEventListener('${this.eventName(attribute.name)}', ${this.generateEventHandler(attribute.value)});`
                 );
 
                 continue;
             }
 
             lines.push(
-                `${variable}.setAttribute('${attribute.name}', '${this.escape(attribute.value)}');`
+                this.generateElementAttribute(
+                    variable,
+                    attribute.name,
+                    attribute.value
+                )
             );
         }
 
@@ -95,7 +104,9 @@ export class Generator {
             const generatedChild =
                 this.generateNode(child);
 
-            lines.push(generatedChild.code);
+            lines.push(
+                generatedChild.code
+            );
 
             lines.push(
                 `${variable}.appendChild(${generatedChild.variable});`
@@ -106,6 +117,28 @@ export class Generator {
             code: lines.join('\n'),
             variable
         };
+    }
+
+    private generateElementAttribute(
+        variable: string,
+        name: string,
+        value: RuntimeAttributeValue
+    ): string {
+        if (value.type === 'static') {
+            return (
+                `${variable}.setAttribute(` +
+                `${JSON.stringify(name)}, ` +
+                `${JSON.stringify(value.value)}` +
+                `);`
+            );
+        }
+
+        return (
+            `${variable}.setAttribute(` +
+            `${JSON.stringify(name)}, ` +
+            `String(${this.expressionCompiler.compile(value.value)})` +
+            `);`
+        );
     }
 
     private generateComponent(
@@ -160,13 +193,20 @@ export class Generator {
                     this.isEvent(attribute.name)
                 ) {
                     value =
-                        this.handlerReference(
+                        this.generateEventHandler(
                             attribute.value
+                        );
+                } else if (
+                    attribute.value.type === 'static'
+                ) {
+                    value =
+                        JSON.stringify(
+                            attribute.value.value
                         );
                 } else {
                     value =
-                        JSON.stringify(
-                            attribute.value
+                        this.expressionCompiler.compile(
+                            attribute.value.value
                         );
                 }
 
@@ -198,7 +238,7 @@ export class Generator {
 
         return {
             code:
-                `const ${variable} = document.createTextNode(AppLogic.${node.value});`,
+                `const ${variable} = document.createTextNode(String(${this.expressionCompiler.compile(node.value)}));`,
             variable
         };
     }
@@ -217,10 +257,18 @@ export class Generator {
             .toLowerCase();
     }
 
-    private handlerReference(
-        handlerName: string
+    private generateEventHandler(
+        value: RuntimeAttributeValue
     ): string {
-        return `AppLogic.${handlerName}`;
+        if (value.type === 'expression') {
+            return this.expressionCompiler.compile(
+                value.value
+            );
+        }
+
+        return this.expressionCompiler.compile(
+            value.value
+        );
     }
 
     private createVariable(
@@ -237,12 +285,4 @@ export class Generator {
 
         return `miau_${normalized}_${this.variableCounter}`;
     }
-
-    private escape(
-        value: string
-    ): string {
-        return JSON.stringify(value)
-            .slice(1, -1);
-    }
 }
-

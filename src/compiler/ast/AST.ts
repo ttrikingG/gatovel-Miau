@@ -30,5 +30,19 @@ export interface ExpressionNode {
 
 export interface AttributeNode {
     name: string;
-    value: string | null;
+    value: AttributeValue | null;
+}
+
+export type AttributeValue =
+    | StaticAttributeValue
+    | ExpressionAttributeValue;
+
+export interface StaticAttributeValue {
+    type: 'static';
+    value: string;
+}
+
+export interface ExpressionAttributeValue {
+    type: 'expression';
+    value: string;
 }

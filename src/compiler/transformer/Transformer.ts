@@ -3,7 +3,8 @@ import type {
     ComponentNode,
     ElementNode,
     TextNode,
-    ExpressionNode
+    ExpressionNode,
+    AttributeNode
 } from '../ast/AST.js';
 
 import type {
@@ -11,7 +12,8 @@ import type {
     CreateComponentNode,
     CreateElementNode,
     CreateTextNode,
-    CreateExpressionNode
+    CreateExpressionNode,
+    RuntimeAttributeNode
 } from './RuntimeAST.js';
 
 export class Transformer {
@@ -47,12 +49,10 @@ export class Transformer {
         return {
             type: 'create-element',
             tag: node.tag,
-            attributes: node.attributes.map(
-                (attribute) => ({
-                    name: attribute.name,
-                    value: attribute.value
-                })
-            ),
+            attributes:
+                this.transformAttributes(
+                    node.attributes
+                ),
             children: node.children.map(
                 (child) =>
                     this.transformNode(child)
@@ -66,17 +66,42 @@ export class Transformer {
         return {
             type: 'create-component',
             name: node.name,
-            attributes: node.attributes.map(
-                (attribute) => ({
-                    name: attribute.name,
-                    value: attribute.value
-                })
-            ),
+            attributes:
+                this.transformAttributes(
+                    node.attributes
+                ),
             children: node.children.map(
                 (child) =>
                     this.transformNode(child)
             )
         };
+    }
+
+    private transformAttributes(
+        attributes: AttributeNode[]
+    ): RuntimeAttributeNode[] {
+        return attributes.map(
+            (attribute) => {
+                if (
+                    attribute.value === null
+                ) {
+                    return {
+                        name: attribute.name,
+                        value: null
+                    };
+                }
+
+                return {
+                    name: attribute.name,
+                    value: {
+                        type:
+                            attribute.value.type,
+                        value:
+                            attribute.value.value
+                    }
+                };
+            }
+        );
     }
 
     private transformText(

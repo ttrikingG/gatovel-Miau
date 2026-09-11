@@ -30,6 +30,19 @@ export interface CreateExpressionNode {
 
 export interface RuntimeAttributeNode {
     name: string;
-    value: string | null;
+    value: RuntimeAttributeValue | null;
 }
 
+export type RuntimeAttributeValue =
+    | StaticRuntimeAttributeValue
+    | ExpressionRuntimeAttributeValue;
+
+export interface StaticRuntimeAttributeValue {
+    type: 'static';
+    value: string;
+}
+
+export interface ExpressionRuntimeAttributeValue {
+    type: 'expression';
+    value: string;
+}

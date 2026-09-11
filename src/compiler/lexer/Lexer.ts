@@ -34,8 +34,15 @@ export class Lexer {
         return tokens;
     }
 
-    private readOutsideTag(tokens: Token[]): void {
-        if (this.source.startsWith('^^', this.position)) {
+    private readOutsideTag(
+        tokens: Token[]
+    ): void {
+        if (
+            this.source.startsWith(
+                '^^',
+                this.position
+            )
+        ) {
             tokens.push({
                 type: 'expression-open',
                 value: '^^'
@@ -47,7 +54,9 @@ export class Lexer {
             return;
         }
 
-        if (this.source[this.position] === '<') {
+        if (
+            this.source[this.position] === '<'
+        ) {
             tokens.push({
                 type: 'tag-open',
                 value: '<'
@@ -64,15 +73,19 @@ export class Lexer {
         while (
             this.position < this.source.length &&
             this.source[this.position] !== '<' &&
-            !this.source.startsWith('^^', this.position)
+            !this.source.startsWith(
+                '^^',
+                this.position
+            )
         ) {
             this.position++;
         }
 
-        const value = this.source.slice(
-            start,
-            this.position
-        );
+        const value =
+            this.source.slice(
+                start,
+                this.position
+            );
 
         if (value.length > 0) {
             tokens.push({
@@ -82,8 +95,11 @@ export class Lexer {
         }
     }
 
-    private readInsideTag(tokens: Token[]): void {
-        const character = this.source[this.position];
+    private readInsideTag(
+        tokens: Token[]
+    ): void {
+        const character =
+            this.source[this.position];
 
         if (this.isWhitespace(character)) {
             this.position++;
@@ -126,8 +142,9 @@ export class Lexer {
             character === '"' ||
             character === "'"
         ) {
-            tokens.push(
-                this.readAttributeValue(character)
+            this.readAttributeValue(
+                tokens,
+                character
             );
 
             return;
@@ -144,20 +161,26 @@ export class Lexer {
         this.position++;
     }
 
-    private readExpression(tokens: Token[]): void {
+    private readExpression(
+        tokens: Token[]
+    ): void {
         const start = this.position;
 
         while (
             this.position < this.source.length &&
-            !this.source.startsWith('^^', this.position)
+            !this.source.startsWith(
+                '^^',
+                this.position
+            )
         ) {
             this.position++;
         }
 
-        const value = this.source.slice(
-            start,
-            this.position
-        ).trim();
+        const value =
+            this.source.slice(
+                start,
+                this.position
+            ).trim();
 
         if (value.length > 0) {
             tokens.push({
@@ -196,16 +219,18 @@ export class Lexer {
             this.position++;
         }
 
-        const value = this.source.slice(
-            start,
-            this.position
-        );
+        const value =
+            this.source.slice(
+                start,
+                this.position
+            );
 
         const previousToken =
             tokens[tokens.length - 1];
 
         if (
-            previousToken?.type === 'tag-open' ||
+            previousToken?.type ===
+                'tag-open' ||
             previousToken?.type === 'slash'
         ) {
             return {
@@ -221,32 +246,72 @@ export class Lexer {
     }
 
     private readAttributeValue(
+        tokens: Token[],
         quote: string
-    ): Token {
+    ): void {
         this.position++;
 
-        const start = this.position;
+        let staticValue = '';
 
         while (
-            this.position < this.source.length &&
-            this.source[this.position] !== quote
+            this.position < this.source.length
         ) {
+            if (
+                this.source.startsWith(
+                    '^^',
+                    this.position
+                )
+            ) {
+                if (staticValue.length > 0) {
+                    tokens.push({
+                        type: 'attribute-value',
+                        value: staticValue
+                    });
+
+                    staticValue = '';
+                }
+
+                tokens.push({
+                    type: 'expression-open',
+                    value: '^^'
+                });
+
+                this.position += 2;
+                this.insideExpression = true;
+
+                this.readExpression(tokens);
+
+                continue;
+            }
+
+            if (
+                this.source[this.position] ===
+                quote
+            ) {
+                this.position++;
+
+                if (staticValue.length > 0) {
+                    tokens.push({
+                        type: 'attribute-value',
+                        value: staticValue
+                    });
+                }
+
+                return;
+            }
+
+            staticValue +=
+                this.source[this.position];
+
             this.position++;
         }
 
-        const value = this.source.slice(
-            start,
-            this.position
-        );
-
-        if (this.position < this.source.length) {
-            this.position++;
+        if (staticValue.length > 0) {
+            tokens.push({
+                type: 'attribute-value',
+                value: staticValue
+            });
         }
-
-        return {
-            type: 'attribute-value',
-            value
-        };
     }
 
     private isWhitespace(

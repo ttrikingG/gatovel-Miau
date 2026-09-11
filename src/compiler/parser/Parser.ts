@@ -3,6 +3,7 @@ import type { Token } from '../lexer/Token.js';
 import type {
     ASTNode,
     AttributeNode,
+    AttributeValue,
     ComponentNode,
     ElementNode,
     TextNode,
@@ -154,15 +155,13 @@ export class Parser {
                 ).value;
 
             let value:
-                string | null = null;
+                AttributeValue | null = null;
 
             if (this.check('equals')) {
                 this.consume('equals');
 
                 value =
-                    this.consume(
-                        'attribute-value'
-                    ).value;
+                    this.parseAttributeValue();
             }
 
             attributes.push({
@@ -172,6 +171,43 @@ export class Parser {
         }
 
         return attributes;
+    }
+
+    private parseAttributeValue():
+        AttributeValue {
+        if (this.check('attribute-value')) {
+            return {
+                type: 'static',
+                value:
+                    this.consume(
+                        'attribute-value'
+                    ).value
+            };
+        }
+
+        if (this.check('expression-open')) {
+            this.consume(
+                'expression-open'
+            );
+
+            const expression =
+                this.consume(
+                    'expression'
+                ).value;
+
+            this.consume(
+                'expression-close'
+            );
+
+            return {
+                type: 'expression',
+                value: expression
+            };
+        }
+
+        throw new Error(
+            'Expected attribute value.'
+        );
     }
 
     private parseText(): TextNode {
@@ -280,4 +316,3 @@ export class Parser {
         return this.check('eof');
     }
 }
-
