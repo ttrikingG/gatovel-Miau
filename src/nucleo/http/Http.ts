@@ -1,87 +1,143 @@
+export interface HttpRequestOptions {
+    headers?: Record<string, string>;
+    signal?: AbortSignal;
+}
+
+export class HttpError extends Error {
+    public readonly status: number;
+    public readonly statusText: string;
+
+    public constructor(
+        status: number,
+        statusText: string,
+        message: string
+    ) {
+        super(message);
+
+        this.name = 'HttpError';
+        this.status = status;
+        this.statusText = statusText;
+    }
+}
+
 export class Http {
-    public static async get<T>(
-        url: string,
-        options: RequestInit = {}
-    ): Promise<T> {
-        return this.request<T>(url, {
-            ...options,
-            method: 'GET'
-        });
+    private readonly baseUrl: string;
+
+    public constructor(baseUrl = '') {
+        this.baseUrl = baseUrl.replace(/\/+$/, '');
     }
 
-    public static async post<T>(
+    public async get<T>(
         url: string,
-        body?: unknown,
-        options: RequestInit = {}
+        options: HttpRequestOptions = {}
     ): Promise<T> {
-        return this.request<T>(url, {
-            ...options,
-            method: 'POST',
-            body: this.prepareBody(body, options.body)
-        });
+        return this.request<T>('GET', url, undefined, options);
     }
 
-    public static async put<T>(
+    public async post<TRequest, TResponse>(
         url: string,
-        body?: unknown,
-        options: RequestInit = {}
-    ): Promise<T> {
-        return this.request<T>(url, {
-            ...options,
-            method: 'PUT',
-            body: this.prepareBody(body, options.body)
-        });
+        data: TRequest,
+        options: HttpRequestOptions = {}
+    ): Promise<TResponse> {
+        return this.request<TResponse>(
+            'POST',
+            url,
+            data,
+            options
+        );
     }
 
-    public static async patch<T>(
+    public async put<TRequest, TResponse>(
         url: string,
-        body?: unknown,
-        options: RequestInit = {}
-    ): Promise<T> {
-        return this.request<T>(url, {
-            ...options,
-            method: 'PATCH',
-            body: this.prepareBody(body, options.body)
-        });
+        data: TRequest,
+        options: HttpRequestOptions = {}
+    ): Promise<TResponse> {
+        return this.request<TResponse>(
+            'PUT',
+            url,
+            data,
+            options
+        );
     }
 
-    public static async delete<T>(
+    public async patch<TRequest, TResponse>(
         url: string,
-        options: RequestInit = {}
-    ): Promise<T> {
-        return this.request<T>(url, {
-            ...options,
-            method: 'DELETE'
-        });
+        data: TRequest,
+        options: HttpRequestOptions = {}
+    ): Promise<TResponse> {
+        return this.request<TResponse>(
+            'PATCH',
+            url,
+            data,
+            options
+        );
     }
 
-    private static async request<T>(
+    public async delete<T>(
         url: string,
-        options: RequestInit
+        options: HttpRequestOptions = {}
     ): Promise<T> {
-        const response = await fetch(url, options);
+        return this.request<T>('DELETE', url, undefined, options);
+    }
+
+    private async request<T>(
+        method: string,
+        url: string,
+        data?: unknown,
+        options: HttpRequestOptions = {}
+    ): Promise<T> {
+        const headers: Record<string, string> = {
+            Accept: 'application/json',
+            ...options.headers
+        };
+
+        const requestOptions: RequestInit = {
+            method,
+            headers,
+            signal: options.signal
+        };
+
+        if (data !== undefined) {
+            headers['Content-Type'] = 'application/json';
+            requestOptions.body = JSON.stringify(data);
+        }
+
+        const response = await fetch(
+            this.buildUrl(url),
+            requestOptions
+        );
 
         if (!response.ok) {
-            throw new Error(
+            throw new HttpError(
+                response.status,
+                response.statusText,
                 `HTTP request failed with status ${response.status}.`
             );
         }
 
-        return response.json() as Promise<T>;
+        if (response.status === 204) {
+            return undefined as T;
+        }
+
+        const contentType =
+            response.headers.get('content-type') ?? '';
+
+        if (contentType.includes('application/json')) {
+            return await response.json() as T;
+        }
+
+        return await response.text() as T;
     }
 
-    private static prepareBody(
-        body: unknown,
-        existingBody: BodyInit | null | undefined
-    ): BodyInit | null | undefined {
-        if (existingBody !== undefined) {
-            return existingBody;
+    private buildUrl(url: string): string {
+        if (!this.baseUrl) {
+            return url;
         }
 
-        if (body === undefined) {
-            return undefined;
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+            return url;
         }
 
-        return JSON.stringify(body);
+        return `${this.baseUrl}/${url.replace(/^\/+/, '')}`;
     }
 }

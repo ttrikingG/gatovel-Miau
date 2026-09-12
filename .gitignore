@@ -27,10 +27,6 @@ coverage/
 # TypeScript
 *.tsbuildinfo
 
-# Tests
-dist-test/
-tests/
-
 # IDE
 .vscode/
 .idea/

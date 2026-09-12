@@ -11,18 +11,17 @@
             "ES2022",
             "DOM"
         ],
-        "types": [
-            "node"
-        ],
-        "rootDir": ".",
-        "outDir": "dist-test"
+        "rootDir": "src",
+        "outDir": "dist",
+        "declaration": true,
+        "sourceMap": true
     },
     "include": [
-        "tests/**/*.ts",
         "src/**/*.ts"
     ],
     "exclude": [
         "node_modules",
-        "dist-test"
+        "dist",
+        "tests"
     ]
 }

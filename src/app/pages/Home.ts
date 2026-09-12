@@ -1,15 +1,40 @@
-import { Component } from '../../nucleo/component/Component.js';
+import { Button } from '../components/Button.js';
+import { MainLayout } from '../layouts/MainLayout.js';
+import { interpolate } from '../../nucleo/template/Template.js';
 
-export class Home extends Component {
-    protected render(): HTMLElement {
-        const main = document.createElement('main');
+export function Home(): HTMLElement {
+    const content = document.createElement('section');
 
-        const title = document.createElement('h1');
+    content.className = 'home-page';
 
-        title.textContent = 'Home';
+    const title = document.createElement('h2');
 
-        main.appendChild(title);
+    title.innerHTML = interpolate(
+        'Olá, ^^user.name^^',
+        {
+            user: {
+                name: 'Tom'
+            }
+        }
+    );
 
-        return main;
-    }
+    const description = document.createElement('p');
+
+    description.textContent =
+        'Miau é um framework frontend pequeno, modular e simples para a Web.';
+
+    const button = Button({
+        label: 'Clique aqui',
+        onClick: () => {
+            window.alert('Miau funcionando!');
+        }
+    });
+
+    content.append(
+        title,
+        description,
+        button
+    );
+
+    return MainLayout(content);
 }

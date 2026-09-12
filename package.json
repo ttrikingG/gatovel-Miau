@@ -1,14 +1,20 @@
 {
     "name": "miau",
     "version": "1.0.0",
-    "description": "A small and modular frontend framework for the web.",
+    "description": "A small, modular and simple frontend framework for the web.",
     "type": "module",
     "license": "MIT",
     "scripts": {
-        "build": "tsc"
+        "build": "node scripts/build.mjs",
+        "clean": "rm -rf dist",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "devDependencies": {
         "@types/node": "^26.5.0",
-        "typescript": "^5.0.0"
+        "jsdom": "^30.0.1",
+        "typescript": "^5.0.0",
+        "vitest": "^3.2.4"
     }
 }
