@@ -1,18 +1,53 @@
 # Miau
 
-**Small. Modular. Simple.**
+<p align="center">
+    <img
+        src="https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/miau-logo-letters.png?raw=true"
+        alt="Miau"
+    >
+</p>
 
-Um framework frontend pequeno, modular e simples para a Web.
+<p align="center">
+    <strong>Small. Modular. Simple.</strong>
+</p>
 
-[![Get Started](https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/btn-get-started.svg?raw=true)](https://github.com/ttrikingG/gatovel-Miau/blob/main/docs/get-started/installation.md)
-[![Documentation](https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/btn-documentation.svg?raw=true)](https://github.com/ttrikingG/gatovel-Miau/blob/main/docs/documentation/architecture.md)
-[![Examples](https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/btn-examples.svg?raw=true)](https://github.com/ttrikingG/gatovel-Miau/blob/main/docs/examples/counter.md)
+<p align="center">
+    Um framework frontend pequeno, modular e simples para a Web.
+</p>
+
+<p align="center">
+    <a href="https://github.com/ttrikingG/gatovel-Miau/blob/main/docs/get-started/installation.md">
+        <img
+            src="https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/btn-get-started.svg?raw=true"
+            alt="Get Started"
+        >
+    </a>
+
+    <a href="https://github.com/ttrikingG/gatovel-Miau/blob/main/docs/documentation/architecture.md">
+        <img
+            src="https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/btn-documentation.svg?raw=true"
+            alt="Documentation"
+        >
+    </a>
+
+    <a href="https://github.com/ttrikingG/gatovel-Miau/blob/main/docs/examples/counter.md">
+        <img
+            src="https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/btn-examples.svg?raw=true"
+            alt="Examples"
+        >
+    </a>
+</p>
 
 ---
 
 ## Miau
 
-![Miau](https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/miau-logo-retro.svg?raw=true)
+<p align="center">
+    <img
+        src="https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/miau-retro.png?raw=true"
+        alt="Miau Retro"
+    >
+</p>
 
 O Miau é um framework frontend pequeno, modular e simples para a Web, desenvolvido como parte do ecossistema Gatovel.
 
