@@ -10,7 +10,7 @@ Um framework frontend pequeno, modular e simples para a Web.
 
 ## Miau
 
-![Miau](https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/imagem/miau.png?raw=true)
+![Miau](https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/imagem/miau-retro.png?raw=true)
 
 O Miau é um framework frontend pequeno, modular e simples para a Web, desenvolvido como parte do ecossistema Gatovel.
 
