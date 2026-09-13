@@ -15,30 +15,17 @@
     Um framework frontend pequeno, modular e simples para a Web.
 </p>
 
-<p>
+<p align="center">
     <a href="docs/get-started/installation.md">
-        <img
-            src="public/assets/images/btn-get-started.svg"
-            alt="Get Started"
-        >
+        <img src="public/assets/images/btn-get-started.svg" alt="Get Started">
     </a>
-</p>
 
-<p>
     <a href="docs/documentation/architecture.md">
-        <img
-            src="public/assets/images/btn-documentation.svg"
-            alt="Documentation"
-        >
+        <img src="public/assets/images/btn-documentation.svg" alt="Documentation">
     </a>
-</p>
 
-<p>
     <a href="docs/examples/counter.md">
-        <img
-            src="public/assets/images/btn-examples.svg"
-            alt="Examples"
-        >
+        <img src="public/assets/images/btn-examples.svg" alt="Examples">
     </a>
 </p>
 
