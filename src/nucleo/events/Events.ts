@@ -5,30 +5,35 @@ export type EventHandler<T extends Event = Event> = (
 export function on<K extends keyof HTMLElementEventMap>(
     element: HTMLElement,
     event: K,
-    handler: EventListenerOrEventListenerObject
+    handler: EventHandler<HTMLElementEventMap[K]>
 ): () => void {
-    element.addEventListener(event, handler);
+    const listener = handler as EventListener;
+
+    element.addEventListener(event, listener);
 
     return () => {
-        element.removeEventListener(event, handler);
+        element.removeEventListener(event, listener);
     };
 }
 
 export function once<K extends keyof HTMLElementEventMap>(
     element: HTMLElement,
     event: K,
-    handler: EventListenerOrEventListenerObject
+    handler: EventHandler<HTMLElementEventMap[K]>
 ): () => void {
-    const listener: EventListener = (eventObject) => {
-        handler instanceof Function
-            ? handler(eventObject)
-            : handler.handleEvent(eventObject);
-    };
+    const listener = handler as EventListener;
 
-    element.addEventListener(event, listener, { once: true });
+    element.addEventListener(
+        event,
+        listener,
+        { once: true }
+    );
 
     return () => {
-        element.removeEventListener(event, listener);
+        element.removeEventListener(
+            event,
+            listener
+        );
     };
 }
 
@@ -54,9 +59,15 @@ export function listen<T = unknown>(
         handler(event as CustomEvent<T>);
     };
 
-    element.addEventListener(name, listener);
+    element.addEventListener(
+        name,
+        listener
+    );
 
     return () => {
-        element.removeEventListener(name, listener);
+        element.removeEventListener(
+            name,
+            listener
+        );
     };
 }

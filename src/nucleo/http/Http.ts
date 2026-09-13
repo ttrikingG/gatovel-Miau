@@ -31,7 +31,12 @@ export class Http {
         url: string,
         options: HttpRequestOptions = {}
     ): Promise<T> {
-        return this.request<T>('GET', url, undefined, options);
+        return this.request<T>(
+            'GET',
+            url,
+            undefined,
+            options
+        );
     }
 
     public async post<TRequest, TResponse>(
@@ -77,7 +82,12 @@ export class Http {
         url: string,
         options: HttpRequestOptions = {}
     ): Promise<T> {
-        return this.request<T>('DELETE', url, undefined, options);
+        return this.request<T>(
+            'DELETE',
+            url,
+            undefined,
+            options
+        );
     }
 
     private async request<T>(
@@ -98,8 +108,11 @@ export class Http {
         };
 
         if (data !== undefined) {
-            headers['Content-Type'] = 'application/json';
-            requestOptions.body = JSON.stringify(data);
+            headers['Content-Type'] =
+                'application/json';
+
+            requestOptions.body =
+                JSON.stringify(data);
         }
 
         const response = await fetch(
@@ -120,9 +133,15 @@ export class Http {
         }
 
         const contentType =
-            response.headers.get('content-type') ?? '';
+            response.headers.get(
+                'content-type'
+            ) ?? '';
 
-        if (contentType.includes('application/json')) {
+        if (
+            contentType.includes(
+                'application/json'
+            )
+        ) {
             return await response.json() as T;
         }
 
@@ -134,10 +153,16 @@ export class Http {
             return url;
         }
 
-        if (url.startsWith('http://') || url.startsWith('https://')) {
+        if (
+            url.startsWith('http://') ||
+            url.startsWith('https://')
+        ) {
             return url;
         }
 
-        return `${this.baseUrl}/${url.replace(/^\/+/, '')}`;
+        return `${this.baseUrl}/${url.replace(
+            /^\/+/,
+            ''
+        )}`;
     }
 }

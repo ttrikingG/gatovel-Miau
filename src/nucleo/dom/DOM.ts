@@ -1,4 +1,9 @@
-export function createElement<K extends keyof HTMLElementTagNameMap>(
+export type ElementStyles =
+    Partial<CSSStyleDeclaration>;
+
+export function createElement<
+    K extends keyof HTMLElementTagNameMap
+>(
     tagName: K,
     options: {
         className?: string;
@@ -7,23 +12,36 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
         attributes?: Record<string, string>;
     } = {}
 ): HTMLElementTagNameMap[K] {
-    const element = document.createElement(tagName);
+    const element =
+        document.createElement(tagName);
 
     if (options.className) {
-        element.className = options.className;
+        element.className =
+            options.className;
     }
 
     if (options.id) {
         element.id = options.id;
     }
 
-    if (options.textContent !== undefined) {
-        element.textContent = options.textContent;
+    if (
+        options.textContent !== undefined
+    ) {
+        element.textContent =
+            options.textContent;
     }
 
     if (options.attributes) {
-        for (const [name, value] of Object.entries(options.attributes)) {
-            element.setAttribute(name, value);
+        for (
+            const [name, value]
+            of Object.entries(
+                options.attributes
+            )
+        ) {
+            element.setAttribute(
+                name,
+                value
+            );
         }
     }
 
@@ -32,7 +50,9 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
 
 export function append(
     parent: HTMLElement,
-    ...children: Array<Node | null | undefined>
+    ...children: Array<
+        Node | null | undefined
+    >
 ): void {
     for (const child of children) {
         if (child) {
@@ -41,25 +61,38 @@ export function append(
     }
 }
 
-export function clear(element: HTMLElement): void {
+export function clear(
+    element: HTMLElement
+): void {
     element.replaceChildren();
 }
 
-export function query<T extends Element = Element>(
+export function query<
+    T extends Element = Element
+>(
     selector: string,
     parent: ParentNode = document
 ): T | null {
-    return parent.querySelector<T>(selector);
+    return parent.querySelector<T>(
+        selector
+    );
 }
 
-export function queryRequired<T extends Element = Element>(
+export function queryRequired<
+    T extends Element = Element
+>(
     selector: string,
     parent: ParentNode = document
 ): T {
-    const element = parent.querySelector<T>(selector);
+    const element =
+        parent.querySelector<T>(
+            selector
+        );
 
     if (!element) {
-        throw new Error(`Element not found: ${selector}`);
+        throw new Error(
+            `Element not found: ${selector}`
+        );
     }
 
     return element;
@@ -70,4 +103,21 @@ export function mount(
     container: HTMLElement
 ): void {
     container.appendChild(element);
+}
+
+export function setStyles(
+    element: HTMLElement,
+    styles: ElementStyles
+): void {
+    for (
+        const [property, value]
+        of Object.entries(styles)
+    ) {
+        if (value !== undefined) {
+            element.style.setProperty(
+                property,
+                String(value)
+            );
+        }
+    }
 }

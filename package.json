@@ -4,6 +4,17 @@
     "description": "A small, modular and simple frontend framework for the web.",
     "type": "module",
     "license": "MIT",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "build": "node scripts/build.mjs",
         "clean": "rm -rf dist",

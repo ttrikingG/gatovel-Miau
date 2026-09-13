@@ -16,6 +16,7 @@ export class Router {
     private readonly routes: Route[];
     private readonly outlet: HTMLElement;
     private readonly notFound: Page;
+    private started = false;
 
     public constructor(
         routes: Route[],
@@ -23,10 +24,18 @@ export class Router {
     ) {
         this.routes = routes;
         this.outlet = options.outlet;
-        this.notFound = options.notFound ?? this.defaultNotFound;
+        this.notFound =
+            options.notFound ??
+            this.defaultNotFound;
     }
 
     public start(): void {
+        if (this.started) {
+            return;
+        }
+
+        this.started = true;
+
         window.addEventListener(
             'popstate',
             this.handlePopState
@@ -106,9 +115,13 @@ export class Router {
             return;
         }
 
-        const href = link.getAttribute('href');
+        const href =
+            link.getAttribute('href');
 
-        if (!href || !href.startsWith('/')) {
+        if (
+            !href ||
+            !href.startsWith('/')
+        ) {
             return;
         }
 
@@ -122,30 +135,50 @@ export class Router {
     ): Route | undefined {
         return this.routes.find(
             (route) =>
-                this.normalizePath(route.path) === path
+                this.normalizePath(
+                    route.path
+                ) === path
         );
     }
 
-    private normalizePath(path: string): string {
-        if (path === '/') {
+    private normalizePath(
+        path: string
+    ): string {
+        const cleanPath =
+            path.split('?')[0]
+                .split('#')[0];
+
+        if (cleanPath === '/') {
             return '/';
         }
 
-        return `/${path.replace(/^\/+|\/+$/g, '')}`;
+        return `/${cleanPath.replace(
+            /^\/+|\/+$/g,
+            ''
+        )}`;
     }
 
-    private readonly defaultNotFound: Page = (): HTMLElement => {
-        const page = document.createElement('main');
+    private readonly defaultNotFound: Page =
+        (): HTMLElement => {
+            const page =
+                document.createElement('main');
 
-        const title = document.createElement('h1');
-        title.textContent = '404';
+            const title =
+                document.createElement('h1');
 
-        const message = document.createElement('p');
-        message.textContent = 'Page not found.';
+            title.textContent = '404';
 
-        page.append(title, message);
+            const message =
+                document.createElement('p');
 
-        return page;
-    };
+            message.textContent =
+                'Page not found.';
+
+            page.append(
+                title,
+                message
+            );
+
+            return page;
+        };
 }
-

@@ -3,6 +3,8 @@ import { on } from '../../nucleo/events/Events.js';
 
 export interface ButtonOptions {
     label?: string;
+    type?: 'button' | 'submit' | 'reset';
+    disabled?: boolean;
     onClick?: () => void;
 }
 
@@ -11,8 +13,13 @@ export function Button(
 ): HTMLButtonElement {
     const button = createElement('button', {
         className: 'miau-button',
-        textContent: options.label ?? 'Button'
+        textContent: options.label ?? 'Button',
+        attributes: {
+            type: options.type ?? 'button'
+        }
     });
+
+    button.disabled = options.disabled ?? false;
 
     if (options.onClick) {
         on(button, 'click', options.onClick);

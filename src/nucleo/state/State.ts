@@ -4,9 +4,13 @@ export type StateListener<T> = (
 
 export class State<T> {
     private value: T;
-    private readonly listeners = new Set<StateListener<T>>();
 
-    public constructor(initialValue: T) {
+    private readonly listeners =
+        new Set<StateListener<T>>();
+
+    public constructor(
+        initialValue: T
+    ) {
         this.value = initialValue;
     }
 
@@ -14,28 +18,50 @@ export class State<T> {
         return this.value;
     }
 
-    public set(value: T): void {
+    public set(
+        value: T
+    ): void {
         this.value = value;
+
         this.notify();
     }
 
     public update(
         updater: (currentValue: T) => T
     ): void {
-        this.value = updater(this.value);
+        this.value = updater(
+            this.value
+        );
+
         this.notify();
     }
 
     public subscribe(
         listener: StateListener<T>
     ): () => void {
-        this.listeners.add(listener);
+        this.listeners.add(
+            listener
+        );
 
         listener(this.value);
 
         return () => {
-            this.listeners.delete(listener);
+            this.listeners.delete(
+                listener
+            );
         };
+    }
+
+    public unsubscribe(
+        listener: StateListener<T>
+    ): void {
+        this.listeners.delete(
+            listener
+        );
+    }
+
+    public clear(): void {
+        this.listeners.clear();
     }
 
     private notify(): void {
