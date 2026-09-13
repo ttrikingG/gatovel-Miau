@@ -16,23 +16,27 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/ttrikingG/gatovel-Miau/blob/main/docs/get-started/installation.md">
+    <a href="docs/get-started/installation.md">
         <img
-            src="https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/btn-get-started.svg?raw=true"
+            src="public/assets/images/btn-get-started.svg"
             alt="Get Started"
         >
     </a>
+</p>
 
-    <a href="https://github.com/ttrikingG/gatovel-Miau/blob/main/docs/documentation/architecture.md">
+<p>
+    <a href="docs/documentation/architecture.md">
         <img
-            src="https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/btn-documentation.svg?raw=true"
+            src="public/assets/images/btn-documentation.svg"
             alt="Documentation"
         >
     </a>
+</p>
 
-    <a href="https://github.com/ttrikingG/gatovel-Miau/blob/main/docs/examples/counter.md">
+<p>
+    <a href="docs/examples/counter.md">
         <img
-            src="https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/btn-examples.svg?raw=true"
+            src="public/assets/images/btn-examples.svg"
             alt="Examples"
         >
     </a>
