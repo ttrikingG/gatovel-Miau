@@ -15,8 +15,8 @@ Projetado com foco em modularidade, simplicidade e uso das APIs nativas da Web, 
 ---
 
 <p align="center">
-  <strong>Gatovel Framework</strong><br>
-  Modular · Extensible · Simple
+  <strong>MIAU</strong><br>
+  Front-end · Extensible · Simple . Framework
 </p>
 
 <p align="center">
