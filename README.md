@@ -15,7 +15,7 @@
     Um framework frontend pequeno, modular e simples para a Web.
 </p>
 
-<p align="center">
+<p>
     <a href="docs/get-started/installation.md">
         <img
             src="public/assets/images/btn-get-started.svg"
