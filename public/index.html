@@ -8,15 +8,376 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Miau</title>
+    <title>Miau — Documentação</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/main.css"
+    >
 </head>
 
 <body>
-    <div id="app"></div>
 
-    <script
-        type="module"
-        src="/app/main.js"
-    ></script>
+<nav
+    class="float-nav"
+    id="floatNav"
+>
+    <button
+        type="button"
+        onclick="openModal('modal-instalacao')"
+    >
+        Instalação
+    </button>
+
+    <button
+        type="button"
+        onclick="openModal('modal-quickstart')"
+    >
+        Quick Start
+    </button>
+
+    <button
+        type="button"
+        onclick="openModal('modal-api')"
+    >
+        API
+    </button>
+
+    <button
+        type="button"
+        onclick="openModal('modal-exemplos')"
+    >
+        Exemplos
+    </button>
+</nav>
+
+<main class="page">
+
+    <section
+        class="hero"
+        id="topo"
+    >
+
+        <img
+            class="mark"
+            src="/assets/images/miau-retro.png"
+            alt="Miau"
+        >
+
+        <h1>
+            MIAU
+        </h1>
+
+        <p class="tagline">
+            Um framework frontend pequeno, modular e simples para a Web.
+        </p>
+
+        <div class="cta-row">
+
+            <button
+                type="button"
+                class="btn btn-solid"
+                onclick="toggleNav(event)"
+            >
+                Documentation
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    miau — documentação
+</footer>
+
+<!-- Instalação -->
+
+<div
+    class="modal-overlay"
+    id="modal-instalacao"
+>
+    <div class="modal">
+
+        <button
+            class="modal-close"
+            onclick="closeModal('modal-instalacao')"
+            aria-label="Fechar"
+        >
+            ✕
+        </button>
+
+        <h2>
+            <span class="eyebrow-num">1</span>
+            Instalação — MIAU
+        </h2>
+
+        <p>
+            Instale o Miau através do npm.
+        </p>
+
+        <pre><span class="comment"># instalar o Miau</span>
+<span class="prompt">$</span> <span class="cmd">npm install miau</span></pre>
+
+    </div>
+</div>
+
+<!-- Quick Start -->
+
+<div
+    class="modal-overlay"
+    id="modal-quickstart"
+>
+    <div class="modal">
+
+        <button
+            class="modal-close"
+            onclick="closeModal('modal-quickstart')"
+            aria-label="Fechar"
+        >
+            ✕
+        </button>
+
+        <h2>
+            <span class="eyebrow-num">2</span>
+            Início rápido — MIAU
+        </h2>
+
+        <ul class="steps">
+
+            <li>
+                <span class="eyebrow-num">1</span>
+
+                <div class="txt">
+                    <strong>
+                        Crie seu projeto
+                    </strong>
+
+                    <p>
+                        Crie uma nova aplicação utilizando o Miau.
+                    </p>
+                </div>
+            </li>
+
+            <li>
+                <span class="eyebrow-num">2</span>
+
+                <div class="txt">
+                    <strong>
+                        Instale o framework
+                    </strong>
+
+                    <p>
+                        Adicione o Miau ao projeto através do npm.
+                    </p>
+                </div>
+            </li>
+
+            <li>
+                <span class="eyebrow-num">3</span>
+
+                <div class="txt">
+                    <strong>
+                        Comece a desenvolver
+                    </strong>
+
+                    <p>
+                        Utilize os módulos do Miau para construir sua aplicação.
+                    </p>
+                </div>
+            </li>
+
+        </ul>
+
+        <pre><span class="comment">// importar recursos do Miau</span>
+<span class="cmd">import</span> {
+    createElement,
+    Router,
+    State
+} <span class="cmd">from</span> <span class="prompt">'miau'</span>;</pre>
+
+    </div>
+</div>
+
+<!-- API -->
+
+<div
+    class="modal-overlay"
+    id="modal-api"
+>
+    <div class="modal">
+
+        <button
+            class="modal-close"
+            onclick="closeModal('modal-api')"
+            aria-label="Fechar"
+        >
+            ✕
+        </button>
+
+        <h2>
+            <span class="eyebrow-num">3</span>
+            Referência da API — MIAU
+        </h2>
+
+        <p>
+            Principais módulos disponíveis no núcleo do Miau.
+        </p>
+
+        <div class="api-item">
+
+            <p class="sig">
+                <span class="fn">
+                    createElement
+                </span>(tagName, options)
+            </p>
+
+            <p>
+                Cria elementos HTML utilizando a API DOM nativa.
+            </p>
+
+        </div>
+
+        <div class="api-item">
+
+            <p class="sig">
+                <span class="fn">
+                    Router
+                </span>(routes, options)
+            </p>
+
+            <p>
+                Gerencia a navegação da aplicação no navegador.
+            </p>
+
+        </div>
+
+        <div class="api-item">
+
+            <p class="sig">
+                <span class="fn">
+                    State
+                </span>(initialValue)
+            </p>
+
+            <p>
+                Cria um estado reativo simples para a aplicação.
+            </p>
+
+        </div>
+
+        <div class="api-item">
+
+            <p class="sig">
+                <span class="fn">
+                    Http
+                </span>(baseUrl)
+            </p>
+
+            <p>
+                Realiza requisições HTTP utilizando a Fetch API.
+            </p>
+
+        </div>
+
+        <div class="api-item">
+
+            <p class="sig">
+                <span class="fn">
+                    interpolate
+                </span>(template, data)
+            </p>
+
+            <p>
+                Resolve interpolação simples utilizando a sintaxe
+                <code class="inline">^^...</code>.
+            </p>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- Exemplos -->
+
+<div
+    class="modal-overlay"
+    id="modal-exemplos"
+>
+    <div class="modal">
+
+        <button
+            class="modal-close"
+            onclick="closeModal('modal-exemplos')"
+            aria-label="Fechar"
+        >
+            ✕
+        </button>
+
+        <h2>
+            <span class="eyebrow-num">4</span>
+            Exemplos — MIAU
+        </h2>
+
+        <div class="ex-grid">
+
+            <div class="ex-card">
+
+                <h3>
+                    Componentes
+                </h3>
+
+                <p>
+                    Crie componentes reutilizáveis utilizando funções e elementos HTML nativos.
+                </p>
+
+            </div>
+
+            <div class="ex-card">
+
+                <h3>
+                    Router
+                </h3>
+
+                <p>
+                    Organize páginas e navegação utilizando o roteador do Miau.
+                </p>
+
+            </div>
+
+            <div class="ex-card">
+
+                <h3>
+                    State
+                </h3>
+
+                <p>
+                    Gerencie estados da aplicação sem depender de bibliotecas externas.
+                </p>
+
+            </div>
+
+            <div class="ex-card">
+
+                <h3>
+                    HTTP
+                </h3>
+
+                <p>
+                    Consuma APIs REST e dados JSON através do módulo HTTP.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script
+    src="/js/main.js"
+></script>
+
 </body>
 </html>

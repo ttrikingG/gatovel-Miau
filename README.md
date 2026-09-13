@@ -1,449 +1,226 @@
-# Gatovel Miau
+cat > README.md <<'EOF'
+# 🐱 Miau
 
-A lightweight and modular frontend framework for Web applications, built with TypeScript and native Web APIs, featuring its own HTML-like component syntax and build-time compiler.
+<p align="center">
+    <strong>Small. Modular. Simple.</strong>
+</p>
 
-Miau is recommended for applications built with the Gatovel Framework, but it is independent and can work with any backend through HTTP/JSON.
+<p align="center">
+    Um framework frontend pequeno, modular e simples para a Web.
+</p>
 
-## About
+<p align="center">
+    <a href="./docs/get-started/installation.md">Get Started</a>
+    &nbsp;·&nbsp;
+    <a href="./docs/documentation/architecture.md">Documentation</a>
+    &nbsp;·&nbsp;
+    <a href="./docs/examples/counter.md">Examples</a>
+</p>
 
-Miau is an independent frontend framework designed to provide a small, predictable, and modular foundation for building Web applications.
+---
 
-Unlike traditional frontend frameworks that require developers to construct component trees directly through JavaScript APIs, Miau provides an HTML-like application syntax that is transformed into JavaScript during the build process.
+## Miau
 
-Example:
+O **Miau** é um framework frontend desenvolvido com **TypeScript** e construído sobre APIs nativas da Web.
 
-```html
-<div class="app">
-    <Header title="Minha aplicação Miau" />
+A proposta é oferecer uma base simples e modular para desenvolvimento de aplicações frontend, mantendo o controle próximo das tecnologias nativas do navegador.
 
-    <main>
-        <h1>Olá Miau</h1>
-    </main>
-</div>
-```
+O Miau não utiliza JSX, não possui arquivos `.miau` e não depende de uma linguagem ou compilador próprio.
 
-The Miau compiler transforms this source into executable JavaScript that creates the corresponding DOM structure and resolves the required components.
+---
 
-The goal is to provide a development experience that feels close to writing HTML while maintaining the flexibility of TypeScript and the native Web platform.
+## ✨ Características
 
-## Philosophy
+- TypeScript
+- APIs nativas da Web
+- Arquitetura modular
+- Manipulação do DOM
+- Sistema de eventos
+- Cliente HTTP
+- Router
+- Gerenciamento de estado
+- Sistema de templates
+- Componentes baseados em funções
+- Sem JSX
+- Sem arquivos `.miau`
+- Independente de backend
 
-Miau follows a simple principle:
+---
 
-> Provide mechanisms, not impose the application.
+# 📚 Documentação
 
-The framework provides the mechanisms required to build Web applications while avoiding unnecessary abstractions and application-level conventions.
+## 🚀 Get Started
 
-Miau does not attempt to reproduce the architecture of existing frameworks such as React, Vue, or Svelte.
+Comece aqui para aprender a utilizar o Miau.
 
-Instead, it defines its own component model, syntax, and compilation pipeline.
+### 1. [Installation](./docs/get-started/installation.md)
 
-## Compiler
+Instale o Miau e prepare o ambiente de desenvolvimento.
 
-The Miau compiler is a build-time compiler responsible for transforming `.miau` application source files into executable JavaScript.
+### 2. [Quick Start](./docs/get-started/quick-start.md)
 
-The compilation pipeline is organized into independent stages:
+Conheça os primeiros conceitos e crie uma aplicação simples.
+
+### 3. [First Application](./docs/get-started/first-application.md)
+
+Construa sua primeira aplicação utilizando o Miau.
+
+---
+
+## 📖 Documentation
+
+Conheça a arquitetura e os principais módulos do framework.
+
+### [Architecture](./docs/documentation/architecture.md)
+
+Entenda como o Miau está organizado e como seus módulos se relacionam.
+
+### [DOM](./docs/documentation/dom.md)
+
+Criação, manipulação e consulta de elementos da Web.
+
+### [Events](./docs/documentation/events.md)
+
+Sistema de eventos do Miau.
+
+### [HTTP](./docs/documentation/http.md)
+
+Comunicação com APIs através de HTTP e JSON.
+
+### [Router](./docs/documentation/router.md)
+
+Navegação entre páginas utilizando o sistema de rotas do Miau.
+
+### [State](./docs/documentation/state.md)
+
+Gerenciamento simples de estado.
+
+### [Template](./docs/documentation/template.md)
+
+Interpolação de dados e utilização do sistema de templates.
+
+---
+
+## 🧪 Examples
+
+Exemplos práticos utilizando os recursos do Miau.
+
+### [Counter](./docs/examples/counter.md)
+
+Exemplo de aplicação utilizando gerenciamento de estado.
+
+### [HTTP](./docs/examples/http.md)
+
+Exemplo de comunicação com uma API.
+
+### [Components](./docs/examples/components.md)
+
+Exemplo de criação e utilização de componentes.
+
+---
+
+# 🏗️ Arquitetura
 
 ```text
-.miau source
-     │
-     ▼
-   Lexer
-     │
-     ▼
-   Parser
-     │
-     ▼
-    AST
-     │
-     ▼
- Transformer
-     │
-     ▼
- Runtime AST
-     │
-     ▼
-  Generator
-     │
-     ▼
- JavaScript
-```
-
-The compiler also includes component resolution and output generation:
-
-```text
-Application Source
-       │
-       ▼
-     Lexer
-       │
-       ▼
-     Parser
-       │
-       ▼
-      AST
-       │
-       ▼
-   Transformer
-       │
-       ▼
-   Runtime AST
-       │
-       ├──────────────► Component Resolver
-       │
-       ▼
-    Generator
-       │
-       ▼
-   JavaScript
-       │
-       ▼
-    Browser
-```
-
-This architecture allows Miau to understand its own component syntax instead of relying on runtime parsing in the browser.
-
-## Miau Syntax
-
-Miau applications use an HTML-like syntax with support for native HTML elements and Miau components.
-
-Example:
-
-```html
-<div class="app">
-    <Header title="Minha aplicação Miau" />
-
-    <main>
-        <Home />
-    </main>
-</div>
-```
-
-HTML elements are represented as native DOM elements, while components are resolved and instantiated by the generated JavaScript.
-
-The syntax is intentionally simple and designed specifically for Miau.
-
-## Components
-
-Components are TypeScript classes that define their own rendering behavior.
-
-Example:
-
-```ts
-import { Component } from '../../src/nucleo/component/Component.js';
-
-interface HeaderProps {
-    title: string;
-}
-
-export class Header extends Component<HeaderProps> {
-    protected render(): HTMLElement {
-        const header = document.createElement('header');
-
-        const title = document.createElement('h1');
-
-        title.textContent = this.props.title;
-
-        header.appendChild(title);
-
-        return header;
-    }
-}
-```
-
-Components can receive typed Props directly from Miau syntax:
-
-```html
-<Header title="Minha aplicação Miau" />
-```
-
-The compiler transforms this into JavaScript equivalent to:
-
-```js
-new Header({
-    "title": "Minha aplicação Miau"
-});
-```
-
-## Props
-
-Miau supports component Props through attributes defined in `.miau` files.
-
-Example:
-
-```html
-<Header title="Minha aplicação Miau" />
-```
-
-The component defines its Props using TypeScript:
-
-```ts
-interface HeaderProps {
-    title: string;
-}
-```
-
-and accesses them through:
-
-```ts
-this.props.title
-```
-
-This allows the component API to remain strongly typed while keeping the application syntax simple.
-
-## Core
-
-The Miau runtime core is organized into independent modules:
-
-* Component
-* DOM
-* Events
-* HTTP
-* Router
-* State
-
-### Component
-
-Provides the base component abstraction and component lifecycle operations.
-
-### DOM
-
-Provides utilities for creating and manipulating native DOM elements.
-
-### Events
-
-Provides event registration, removal, and dispatching.
-
-### HTTP
-
-Provides a small abstraction over the native `fetch` API for HTTP communication.
-
-### Router
-
-Provides client-side navigation and route resolution.
-
-### State
-
-Provides a lightweight state container with subscriptions.
-
-All core modules are implemented using TypeScript and native Web APIs.
-
-## Architecture
-
-The project is organized into distinct layers:
-
-```text
-miau/
-├── public/
+src/
+├── nucleo/
+│   ├── dom/
+│   ├── events/
+│   ├── http/
+│   ├── router/
+│   ├── state/
+│   └── template/
 │
-├── src/
-│   ├── nucleo/
-│   │   ├── component/
-│   │   ├── dom/
-│   │   ├── events/
-│   │   ├── http/
-│   │   ├── router/
-│   │   └── state/
-│   │
-│   ├── compiler/
-│   │   ├── ast/
-│   │   ├── generator/
-│   │   ├── lexer/
-│   │   ├── parser/
-│   │   ├── transformer/
-│   │   ├── resolver/
-│   │   ├── output/
-│   │   └── Compiler.ts
-│   │
-│   ├── build/
-│   │   └── Build.ts
-│   │
-│   ├── cli/
-│   │   └── index.ts
-│   │
-│   └── app/
-│       ├── components/
-│       ├── pages/
-│       ├── layouts/
-│       ├── routes/
-│       ├── services/
-│       ├── state/
-│       └── styles/
-│
-├── tests/
-├── miau.config.ts
-├── package.json
-├── tsconfig.json
-├── .gitignore
-└── README.md
-```
+└── app/
+    ├── components/
+    ├── layouts/
+    ├── pages/
+    ├── routes/
+    ├── services/
+    ├── state/
+    └── styles/
 
-## Compiler Architecture
+O diretório nucleo contém as funcionalidades fundamentais do framework.
 
-The compiler is divided into specialized modules:
+O diretório app representa a aplicação construída utilizando o Miau.
 
-### Lexer
+🌐 Backend
 
-Converts Miau source code into tokens.
+O Miau não acessa bancos de dados diretamente.
 
-### Parser
+A comunicação com o backend acontece através de HTTP e JSON.
 
-Converts tokens into an Abstract Syntax Tree (AST).
+┌─────────────────┐
+│      MIAU       │
+│    Frontend     │
+└────────┬────────┘
+         │
+      HTTP/JSON
+         │
+         ▼
+┌─────────────────┐
+│     Backend     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│    Database     │
+└─────────────────┘
 
-### AST
+O backend pode ser desenvolvido utilizando qualquer tecnologia capaz de fornecer uma API HTTP/JSON.
 
-Represents the structure of the Miau source independently from the generated runtime code.
+🐾 Ecossistema
 
-### Transformer
+O Miau é um projeto independente, mas foi desenvolvido para trabalhar muito bem com o ecossistema Gatovel.
 
-Transforms the source AST into a runtime-oriented AST describing the operations required to create the application.
+┌──────────────────────────┐
+│         Gatovel          │
+│          Backend         │
+└────────────┬─────────────┘
+             │
+          HTTP/JSON
+             │
+             ▼
+┌──────────────────────────┐
+│           Miau           │
+│          Frontend        │
+└──────────────────────────┘
 
-### Generator
+O Miau não depende do Gatovel e pode ser utilizado com qualquer backend HTTP/JSON.
 
-Converts the runtime AST into executable JavaScript.
+📦 Instalação rápida
+npm install miau
 
-### Component Resolver
+Para criar uma nova aplicação:
 
-Resolves Miau component references to their TypeScript source files and generates the corresponding JavaScript imports.
+create-miau meu-projeto
 
-### Output Writer
+Depois:
 
-Writes generated compiler output to the filesystem.
+cd meu-projeto
+npm install
+npm run dev
+🧭 Navegação
+Get Started
+Installation →
+Quick Start →
+First Application →
+Documentation
+Architecture →
+DOM →
+Events →
+HTTP →
+Router →
+State →
+Template →
+Examples
+Counter →
+HTTP →
+Components →
+📄 License
 
-### Build
+MIT License.
 
-Coordinates the Miau compilation process and output generation.
+<p align="center"> <strong>Miau</strong><br> Small. Modular. Simple. </p> EOF ```
 
-## Development Model
-
-Miau follows a build-time approach.
-
-The browser does not need to understand the `.miau` syntax directly.
-
-Instead:
-
-```text
-Developer
-    │
-    │ writes
-    ▼
-App.miau
-    │
-    │ build
-    ▼
-Miau Compiler
-    │
-    │ generates
-    ▼
-JavaScript
-    │
-    ▼
-Browser
-```
-
-This keeps the runtime lightweight and moves the complexity of understanding Miau syntax into the development/build process.
-
-## Backend Independence
-
-Miau is not coupled to the Gatovel Framework.
-
-Although Miau is primarily recommended as the frontend framework for Gatovel applications, it can communicate with any backend capable of providing HTTP/JSON APIs.
-
-For example:
-
-```text
-Miau
- │
- │ HTTP/JSON
- ▼
-Gatovel
-```
-
-or:
-
-```text
-Miau
- │
- │ HTTP/JSON
- ▼
-Laravel
-```
-
-or:
-
-```text
-Miau
- │
- │ HTTP/JSON
- ▼
-Node.js
-```
-
-The frontend framework does not impose a specific backend technology.
-
-## Native Web Platform
-
-Miau is built on top of native Web APIs instead of depending on a large runtime ecosystem.
-
-The framework makes use of APIs such as:
-
-* DOM APIs
-* Fetch API
-* History API
-* Browser Events
-* Web APIs available through TypeScript
-
-The objective is to keep the framework understandable, modular, and close to the platform on which it runs.
-
-## Current Status
-
-Miau is currently under active development.
-
-The following foundations are already implemented:
-
-* TypeScript-based framework core
-* Component system
-* DOM utilities
-* Events module
-* HTTP module
-* Router
-* State management
-* Miau HTML-like syntax
-* Lexer
-* Parser
-* Abstract Syntax Tree
-* Runtime AST
-* Transformer
-* JavaScript Generator
-* Component Resolver
-* Build system
-* Component Props
-* `.miau` to JavaScript compilation
-* Browser execution of compiled applications
-
-The compiler has been successfully tested through the complete pipeline:
-
-```text
-.miau
-  ↓
-Compiler
-  ↓
-JavaScript
-  ↓
-Component import
-  ↓
-DOM generation
-  ↓
-Browser
-```
-
-Development is continuing incrementally, with each subsystem being implemented and tested before expanding the framework.
-
-## Requirements
-
-* Node.js
-* TypeScript
-
-## License
-
-MIT
+Agora o README.md é a Home, e os links levam diretamente para as páginas de docs/.

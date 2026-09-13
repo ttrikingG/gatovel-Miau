@@ -1,0 +1,723 @@
+:root {
+    --ink-950: #120a24;
+    --ink-900: #1a0f30;
+    --ink-800: #241541;
+
+    --glass: rgba(28, 16, 52, 0.55);
+    --glass-solid: rgba(24, 14, 46, 0.92);
+    --glass-border: rgba(255, 140, 180, 0.22);
+
+    --pink: #ff2ec2;
+    --pink-soft: #ff7fdb;
+    --orange: #3ee8d0;
+    --gold: #57ff8f;
+    --violet: #1fb8d8;
+
+    --text-hi: #fbeaf4;
+    --text-lo: #c9b8dd;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family:
+        'IBM Plex Mono',
+        monospace;
+
+    color: var(--text-hi);
+
+    background-image:
+        linear-gradient(
+            180deg,
+            rgba(10, 10, 24, 0.72) 0%,
+            rgba(12, 14, 30, 0.55) 40%,
+            rgba(8, 10, 20, 0.85) 100%
+        ),
+        url('../assets/images/miau-background.png');
+
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+h1,
+h2,
+h3 {
+    font-family:
+        'Space Grotesk',
+        sans-serif;
+}
+
+/* =========================
+   NAV
+========================= */
+
+.float-nav {
+    position: fixed;
+
+    top: 22px;
+    left: 50%;
+
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 8px;
+
+    background: var(--glass);
+
+    border:
+        1px solid
+        var(--glass-border);
+
+    border-radius: 999px;
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    box-shadow:
+        0 8px 30px
+        rgba(31, 184, 216, 0.15),
+        0 2px 8px
+        rgba(0, 0, 0, 0.4);
+
+    opacity: 0;
+
+    transform:
+        translateX(-50%)
+        translateY(-16px)
+        scale(0.95);
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.float-nav.open {
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        translateY(0)
+        scale(1);
+
+    pointer-events: auto;
+}
+
+.float-nav button {
+    display: inline-block;
+
+    padding: 9px 18px;
+
+    border-radius: 999px;
+
+    color: var(--text-lo);
+
+    font-size: 13.5px;
+
+    letter-spacing: 0.02em;
+
+    font-family:
+        'IBM Plex Mono',
+        monospace;
+
+    background: transparent;
+
+    border: none;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
+
+    white-space: nowrap;
+}
+
+.float-nav button:hover {
+    color: var(--text-hi);
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.page {
+    max-width: 880px;
+
+    margin: 0 auto;
+
+    padding: 0 24px;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    text-align: center;
+
+    padding: 120px 0 80px;
+}
+
+.hero img.mark {
+    width: 132px;
+    height: 132px;
+
+    border-radius: 26px;
+
+    object-fit: cover;
+
+    box-shadow:
+        0 0 0 1px
+        rgba(255, 255, 255, 0.15),
+
+        0 20px 60px
+        rgba(31, 184, 216, 0.35);
+
+    margin-bottom: 28px;
+}
+
+.hero h1 {
+    font-size:
+        clamp(42px, 8vw, 72px);
+
+    line-height: 0.95;
+
+    margin: 0 0 14px;
+
+    font-weight: 700;
+
+    background:
+        linear-gradient(
+            100deg,
+            var(--pink) 0%,
+            var(--orange) 55%,
+            var(--gold) 100%
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+
+    letter-spacing: -0.01em;
+}
+
+.hero p.tagline {
+    color: var(--text-lo);
+
+    font-size: 16px;
+
+    max-width: 480px;
+
+    margin: 0 auto 48px;
+
+    line-height: 1.6;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.cta-row {
+    display: flex;
+
+    gap: 16px;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    align-items: flex-start;
+}
+
+.btn {
+    font-family:
+        'IBM Plex Mono',
+        monospace;
+
+    font-size: 14.5px;
+
+    padding: 15px 30px;
+
+    border-radius: 14px;
+
+    border:
+        1px solid
+        var(--glass-border);
+
+    cursor: pointer;
+
+    display: inline-block;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-solid {
+    background:
+        linear-gradient(
+            135deg,
+            var(--pink),
+            var(--orange)
+        );
+
+    color: var(--ink-950);
+
+    font-weight: 600;
+
+    border: none;
+
+    box-shadow:
+        0 10px 30px
+        rgba(255, 46, 194, 0.3);
+}
+
+.btn-solid:hover {
+    box-shadow:
+        0 14px 36px
+        rgba(255, 46, 194, 0.4);
+}
+
+.btn:focus-visible {
+    outline:
+        2px solid
+        var(--text-hi);
+
+    outline-offset: 4px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(10, 5, 20, 0.72);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.2s ease;
+
+    z-index: 300;
+}
+
+.modal-overlay.open {
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+.modal {
+    position: relative;
+
+    background:
+        var(--glass-solid);
+
+    border:
+        1px solid
+        var(--glass-border);
+
+    border-radius: 22px;
+
+    max-width: 620px;
+
+    width: 100%;
+
+    max-height: 78vh;
+
+    overflow-y: auto;
+
+    padding: 42px 44px;
+
+    box-shadow:
+        0 30px 80px
+        rgba(0, 0, 0, 0.5);
+
+    transform:
+        scale(0.92)
+        translateY(14px);
+
+    transition:
+        transform
+        0.22s
+        cubic-bezier(
+            0.2,
+            0.8,
+            0.3,
+            1.2
+        );
+}
+
+.modal-overlay.open .modal {
+    transform:
+        scale(1)
+        translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+
+    top: 18px;
+    right: 18px;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    border: none;
+
+    color: var(--text-hi);
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        background 0.15s ease;
+}
+
+.modal-close:hover {
+    background:
+        rgba(255, 255, 255, 0.2);
+}
+
+.eyebrow-num {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--violet),
+            var(--pink)
+        );
+
+    color: var(--text-hi);
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-right: 10px;
+
+    flex-shrink: 0;
+}
+
+.modal h2 {
+    font-size: 24px;
+
+    display: flex;
+
+    align-items: center;
+
+    margin: 0 0 18px;
+
+    color: var(--text-hi);
+}
+
+.modal p {
+    color: var(--text-lo);
+
+    line-height: 1.7;
+
+    font-size: 14.5px;
+}
+
+/* =========================
+   CODE
+========================= */
+
+pre {
+    background:
+        rgba(8, 4, 18, 0.75);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 12px;
+
+    padding: 18px 20px;
+
+    overflow-x: auto;
+
+    font-size: 13.5px;
+
+    line-height: 1.6;
+
+    margin: 16px 0 4px;
+}
+
+pre .prompt {
+    color: var(--pink-soft);
+}
+
+pre .cmd {
+    color: var(--gold);
+}
+
+pre .comment {
+    color: var(--text-lo);
+
+    opacity: 0.6;
+}
+
+code.inline {
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    padding: 2px 7px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    color: var(--gold);
+}
+
+/* =========================
+   QUICK START
+========================= */
+
+.steps {
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+.steps li {
+    display: flex;
+
+    gap: 14px;
+
+    align-items: flex-start;
+}
+
+.steps .txt strong {
+    display: block;
+
+    color: var(--text-hi);
+
+    font-family:
+        'Space Grotesk',
+        sans-serif;
+
+    font-size: 15px;
+
+    margin-bottom: 4px;
+}
+
+.steps .txt p {
+    margin: 0;
+}
+
+/* =========================
+   API
+========================= */
+
+.api-item {
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    padding: 18px 0;
+}
+
+.api-item:first-of-type {
+    border-top: none;
+
+    padding-top: 4px;
+}
+
+.api-item .sig {
+    color: var(--gold);
+
+    font-size: 14px;
+
+    margin: 0 0 6px;
+}
+
+.api-item .sig .fn {
+    color: var(--pink-soft);
+}
+
+/* =========================
+   EXAMPLES
+========================= */
+
+.ex-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 16px;
+}
+
+.ex-card {
+    background:
+        rgba(255, 255, 255, 0.04);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 14px;
+
+    padding: 20px;
+}
+
+.ex-card h3 {
+    font-size: 15px;
+
+    margin: 0 0 8px;
+
+    color: var(--text-hi);
+}
+
+.ex-card p {
+    font-size: 13px;
+
+    margin: 0;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    position: fixed;
+
+    bottom: 14px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    text-align: center;
+
+    color: var(--text-lo);
+
+    font-size: 12px;
+
+    opacity: 0.55;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 720px) {
+
+    .float-nav {
+        max-width: 92vw;
+
+        overflow-x: auto;
+
+        top: 14px;
+    }
+
+    .float-nav button {
+        padding: 8px 13px;
+
+        font-size: 12.5px;
+    }
+}
+
+@media (max-width: 560px) {
+
+    .ex-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal {
+        padding: 36px 24px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    .btn:hover {
+        transform: none;
+    }
+}
+
+::selection {
+    background: var(--pink);
+
+    color: var(--ink-950);
+}
