@@ -11,3 +11,14 @@
 Projetado com foco em modularidade, simplicidade e uso das APIs nativas da Web, o Miau fornece uma base leve para a construção de aplicações frontend modernas.</p>
 
 <p align="center"><img src="https://github.com/ttrikingG/gatovel-Miau/blob/main/public/assets/images/miau-retro.png?raw=true"alt="Miau Retro"></p>
+
+---
+
+<p align="center">
+  <strong>Gatovel Framework</strong><br>
+  Modular · Extensible · Simple
+</p>
+
+<p align="center">
+  <a href="LICENSE">MIT License</a>
+</p>
